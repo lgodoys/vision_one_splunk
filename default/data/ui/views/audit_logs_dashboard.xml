@@ -1,0 +1,61 @@
+<form version="1.1" theme="dark" refresh="60">
+  <label>Audit Logs</label>
+  <search id="tableSearch">
+    <query>source="vo_audit_logs"
+| sort -loggedTime
+| spath output=Details path="details"
+| fields - linecount, punct, eventtype, index, timestamp, splunk_server_group, sourcetype
+| rename loggedTime AS Logged, user AS Account, role AS Role, access AS Source, category AS Category, activity AS Activity, result AS Result
+| table Logged, Account, Role, Source, Category, Activity, Result, Details</query>
+    <earliest>$timeframe.earliest$</earliest>
+    <latest>$timeframe.latest$</latest>
+  </search>
+  <fieldset submitButton="false"></fieldset>
+  <row>
+    <panel>
+      <input type="time" token="timeframe">
+        <label>Period</label>
+        <default>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </default>
+      </input>
+      <html>
+        <style>
+          .input-checkbox {
+            min-width: 120px !important;
+            width: 120px !important;
+            max-width: 120px !important;
+          }
+          .input-radio {
+            min-width: 120px !important;
+            width: 120px !important;
+            max-width: 120px !important;
+          }
+          #chartFontSize text {
+            font-size: 15px !important;
+          }
+          #tableWithDrilldown table tbody tr td, #tableWithDrilldown table thead th a {
+            color: white !important;
+          }
+          #tableWithDrilldown td:nth-child(9) {
+            max-width: 555px !important;
+          }
+        </style>
+      </html>
+      
+      <table id="tableWithDrilldown">
+        <search base="tableSearch"></search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">true</option>
+        <option name="totalsRow">false</option>
+        <format type="color" field="Result">
+          <colorPalette type="map">{"Unsuccessful":#DC4E41,"Successful":#53A051}</colorPalette>
+        </format>
+        <fields>["Logged","Account","Role","Source","Category","Activity","Result","Details"]</fields>
+      </table>
+    </panel>
+  </row>
+</form>

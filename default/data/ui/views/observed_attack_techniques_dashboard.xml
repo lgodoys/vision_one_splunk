@@ -1,0 +1,259 @@
+<form version="1.1" theme="dark" refresh="600">
+  <label>Observed Attack Techniques</label>
+  <search id="baseSearch">
+    <query>source="vo_oat"
+| spath output=Endpoint path=endpoint.ips{}
+| spath output=Techniques path=filter.techniques{}
+| spath output=Tactics path=filter.tactics{}
+| spath output=Level path=filter.level
+| where isnotnull(Level) AND (NOT Level="undefined")
+    </query>
+    <earliest>$timeframe.earliest$</earliest>
+    <latest>$timeframe.latest$</latest>
+  </search>
+  <search id="tableSearch">
+    <query>source="vo_oat"
+| spath output=Endpoint path=endpoint.ips{}
+| spath output=Techniques path=filter.techniques{}
+| spath output=Tactics path=filter.tactics{}
+| spath output=Level path=filter.level
+| where isnotnull(Level) AND (NOT Level="undefined")
+| eval Level=upper(substr(Level,1,1))+substr(Level,2)
+| sort -detectionTime
+| rename detectionTime as Generated, filter.name as Detection, Level as "Risk level", id as "Event ID"
+| table Generated, Detection, "Risk level", "Event ID", Endpoint, Techniques, Tactics</query>
+    <earliest>$timeframe.earliest$</earliest>
+    <latest>$timeframe.latest$</latest>
+  </search>
+  <fieldset submitButton="false"></fieldset>
+  <row>
+    <panel>
+      <input type="time" token="timeframe">
+        <label>Period</label>
+        <default>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </default>
+      </input>
+      <input type="radio" token="showGraph" searchWhenChanged="true">
+        <label>View graph</label>
+        <choice value="1">Show</choice>
+        <choice value="0">Hide</choice>
+        <change>
+          <condition value="1">
+            <set token="showGraph">true</set>
+          </condition>
+          <condition value="0">
+            <unset token="showGraph"></unset>
+          </condition>
+        </change>
+        <default>1</default>
+        <initialValue>1</initialValue>
+      </input>
+      <html>
+        <style type="text/css">
+          #singleViz0 .single-value .single-result { font-size: 200% !important; }
+          #singleViz1 .single-value .single-result { font-size: 200% !important; }
+          #singleViz2 .single-value .single-result { font-size: 200% !important; }
+          #singleViz3 .single-value .single-result { font-size: 200% !important; }
+          #singleViz4 .single-value .single-result { font-size: 200% !important; }
+        </style>
+        <style>
+          .input-checkbox {
+            min-width: 120px !important;
+            width: 120px !important;
+            max-width: 120px !important;
+          }
+          .input-radio {
+            min-width: 120px !important;
+            width: 120px !important;
+            max-width: 120px !important;
+          }
+          #chartFontSize text {
+            font-size: 15px !important;
+          }
+          #tableWithDrilldown table tbody tr td, #tableWithDrilldown table thead th a{
+            color: white !important;
+          }
+        </style>
+      </html>
+      <single id="singleViz0">
+        <search base="baseSearch">
+          <query>| stats count(eval(Level="critical")) as "Critical Risks"</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["#DC4E41","#DC4E41"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">small</option>
+        <option name="trellis.splitBy">_aggregation</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unit">Critical Risks</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single id="singleViz1">
+        <search base="baseSearch">
+          <query>| stats count(eval(Level="high")) as "High Risks"</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["#F1813F","#F1813F"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">small</option>
+        <option name="trellis.splitBy">_aggregation</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unit">High Risks</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single id="singleViz2">
+        <search base="baseSearch">
+          <query>| stats count(eval(Level="medium")) as "Medium Risks"</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["#F8BE34","#F8BE34"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">large</option>
+        <option name="trellis.splitBy">_aggregation</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unit">Medium Risks</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single id="singleViz3">
+        <search base="baseSearch">
+          <query>| stats count(eval(Level="low")) as "Low Risks"</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x53a051","0x53a051"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">large</option>
+        <option name="trellis.splitBy">_aggregation</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unit">Low Risks</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single id="singleViz4">
+        <search base="baseSearch">
+          <query>| stats count(eval(Level="info")) as "Info"</query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["#B6C75A","#B6C75A"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">large</option>
+        <option name="trellis.splitBy">_aggregation</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unit">Info Risks</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <chart depends="$showGraph$" id="chartFontSize">
+        <search base="baseSearch">
+          <query>| eval Level=case(Level=="critical","Critical",Level=="high","High",Level=="medium","Medium",Level=="low","Low",Level=="info","Info")
+| stats count(eval(Level="Critical")) as Critical,
+        count(eval(Level="High")) as High,
+        count(eval(Level="Medium")) as Medium,
+        count(eval(Level="Low")) as Low,
+        count(eval(Level="Info")) as Info by Level
+| sort - Critical, High, Medium, Low, Info</query>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">all</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"Critical":#DC4E41,"High":#F1813F,"Medium":#F8BE34,"Low":0x53a051,"Info":#B6C75A}</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trellis.splitBy">Model Severity</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table id="tableWithDrilldown">
+        <search base="tableSearch"></search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">true</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <format type="color" field="Risk level">
+          <colorPalette type="map">{"Critical":#DC4E41,"High":#F1813F,"Medium":#F8BE34,"Low":0x53a051,"Info":#B6C75A}</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+</form>

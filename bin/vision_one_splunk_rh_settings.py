@@ -12,17 +12,6 @@ from splunktaucclib.splunk_aoblib.rest_migration import ConfigMigrationHandler
 
 util.remove_http_proxy_env_vars()
 
-fields_additional_parameters = [
-    field.RestField(
-        'endpoint',
-        required=True,
-        encrypted=False,
-        default=''
-    )
-]
-
-model_additional_parameters = RestModel(fields_additional_parameters, name='additional_parameters')
-
 fields_proxy = [
     field.RestField(
         'proxy_enabled',
@@ -104,7 +93,6 @@ model_logging = RestModel(fields_logging, name='logging')
 endpoint = MultipleModel(
     'vision_one_splunk_settings',
     models=[
-        model_additional_parameters,
         model_proxy, 
         model_logging
     ],

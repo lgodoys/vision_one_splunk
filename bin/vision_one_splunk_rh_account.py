@@ -22,7 +22,17 @@ fields = [
             min_len=1, 
             max_len=200, 
         )
-    ), 
+    ),
+    field.RestField(
+        'url',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=validator.String(
+            min_len=1, 
+            max_len=200, 
+        )
+    ),
     field.RestField(
         'password',
         required=True,

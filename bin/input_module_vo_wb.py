@@ -71,7 +71,8 @@ def validate_input(helper, definition):
 def collect_events(helper, ew):
     STANZA = helper.get_input_stanza_names()
     token = helper.get_arg('global_account')['password']
-    endpoint = helper.get_global_setting("endpoint")
+    endpoint = helper.get_arg('global_account')['url']
+    
     if (not endpoint) or (not token):
         helper.log_info("[TrendMicro Audit] no valid config, will pass")
         return 0

@@ -63,8 +63,8 @@ def collect_events(helper, ew):
     polling = helper.get_arg('interval')
     token = helper.get_arg('global_account')['password']
     backoff_time = float(helper.get_global_setting("backoff_time") or 10)
-
-    endpoint = helper.get_global_setting("endpoint")
+    endpoint = helper.get_arg('global_account')['url']
+    
     if (not endpoint) or (not token):
         helper.log_info("[TrendMicro Audit] no valid config, will pass")
         return 0

@@ -53,6 +53,42 @@
                             ]
                         },
                         {
+                            "field": "url",
+                            "label": "URL",
+                            "help": "Select a unique URL for this account. Refer to https://automation.trendmicro.com/xdr/Guides/Regional-Domains to get specific FQDN and Region for your domain",
+                            "required": true,
+                            "type": "singleSelect",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "https://api.au.xdr.trendmicro.com",
+                                        "label": "Australia"
+                                    },
+                                    {
+                                        "value": "https://api.eu.xdr.trendmicro.com",
+                                        "label": "European Union"
+                                    },
+                                    {
+                                        "value": "https://api.in.xdr.trendmicro.com",
+                                        "label": "India"
+                                    },
+                                    {
+                                        "value": "https://api.xdr.trendmicro.com.jp",
+                                        "label": "Japan"
+                                    },
+                                    {
+                                        "value": "https://api.sg.xdr.trendmicro.com",
+                                        "label": "Singapore"
+                                    },
+                                    {
+                                        "value": "https://api.xdr.trendmicro.com",
+                                        "label": "United States"
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             "field": "username",
                             "label": "Username",
                             "type": "text",
@@ -83,27 +119,6 @@
                                     "minLength": 1,
                                     "maxLength": 8192,
                                     "errorMsg": "Length of password should be between 1 and 8192"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "additional_parameters",
-                    "title": "XDR Endpoint URL",
-                    "entity": [
-                        {
-                            "field": "endpoint",
-                            "label": "Endpoint URL",
-                            "type": "text",
-                            "help": "URL to send the HTTPS GET request to",
-                            "required": true,
-                            "defaultValue": "",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "pattern": "(https)://([\\w.]+/?)\\S*",
-                                    "errorMsg": "Endpoint URL mus use HTTPS protocol"
                                 }
                             ]
                         }

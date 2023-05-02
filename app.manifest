@@ -5,7 +5,7 @@
     "id": {
       "group": null,
       "name": "vision_one_splunk",
-      "version": "1.0.2"
+      "version": "1.0.3"
     },
     "author": [
       {
@@ -34,7 +34,7 @@
     },
     "releaseNotes": {
       "name": null,
-      "text": "./README.txt",
+      "text": "./README.md",
       "uri": null
     }
   },

@@ -1,5 +1,8 @@
 RELEASE NOTES:
 
+Version 1.0.3: May 02, 2023
+Modified support for multiple XDR endpoints, removing Additional parameters and added dropdown to select specific endpoint for account based on API token. XDR endpoints are listed in https://automation.trendmicro.com/xdr/Guides/Regional-Domains.
+
 Version 1.0.2: Apr 04, 2023
 Added support to multiple XDR endpoints, removing hardcoded XDR endpoint and added new field XDR Endpoint in additional parameters.
 Modified captions below username and password fields in account, to add information about usage of these fields in app.

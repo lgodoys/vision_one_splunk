@@ -1,7 +1,7 @@
 {
   "schemaVersion": "2.0.0",
   "info": {
-    "title": "Vision One for Splunk",
+    "title": "Vision One for Splunk Add-on",
     "id": {
       "group": null,
       "name": "vision_one_splunk",
@@ -34,7 +34,7 @@
     },
     "releaseNotes": {
       "name": null,
-      "text": "./README.txt",
+      "text": "./README.md",
       "uri": null
     }
   },

@@ -5,7 +5,7 @@
     "id": {
       "group": null,
       "name": "vision_one_splunk",
-      "version": "1.0.3"
+      "version": "1.0.4"
     },
     "author": [
       {
@@ -15,7 +15,7 @@
       }
     ],
     "releaseDate": null,
-    "description": "Trend Micro Vision One for Splunk",
+    "description": "Vision One for Splunk Add-on",
     "classification": {
       "intendedAudience": null,
       "categories": [],
@@ -34,7 +34,7 @@
     },
     "releaseNotes": {
       "name": null,
-      "text": "./README.md",
+      "text": "./README.txt",
       "uri": null
     }
   },

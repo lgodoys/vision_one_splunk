@@ -9,6 +9,3 @@ proxy_rdns =
 
 [logging]
 loglevel = 
-
-[additional_parameters]
-endpoint = 

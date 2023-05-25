@@ -41,7 +41,7 @@ def spread_filters(detection):
         filters_list.append(dcopy_data)
     return filters_list
 
-def format_risk_levels(risk_level="medium"):
+def format_risk_levels(risk_level):
     query_levels = ["undefined", "info", "low", "medium", "high", "critical"]
     if risk_level not in query_levels:
         risk_level = "medium"
@@ -148,7 +148,7 @@ def validate_input(helper, definition):
 def collect_events(helper, ew):
     STANZA = helper.get_input_stanza_names()
     polling = helper.get_arg('interval')
-    risk_level = helper.get_arg('risklevel')
+    risk_level = helper.get_arg('risk_level')
     token = helper.get_arg('global_account')['password']
     backoff_time = int(helper.get_global_setting("backoff_time") or 10)
     endpoint = helper.get_arg('global_account')['url']
@@ -166,7 +166,6 @@ def collect_events(helper, ew):
         oat_util = OATDataPipeline(helper,endpoint,token,risk_level)
     except Exception as e:
         return 1
-
     global_ctx = utils.fetch_context("GLOBAL")
     if global_ctx.get('oatSettingModify', 0) == 1:
         oat_util.update(risk_level)
@@ -174,8 +173,10 @@ def collect_events(helper, ew):
     else:
         oat_setting = oat_util.get_setting()
         cloud_risk_level = defined_risk_level(oat_setting['riskLevels'])
-        if cloud_risk_level != risk_level:
-            utils.set_input_setting(f'vo_oat://{STANZA}', 'risk_level', cloud_risk_level)
+        helper.log_info(f"[TrendMicro OAT] Cloud Risk Level: {cloud_risk_level}")
+        """if cloud_risk_level != risk_level:
+            helper.log_info(f"[TrendMicro OAT] Cloud Risk Level: {cloud_risk_level}, {risk_level}")
+            utils.set_input_setting(f'vo_oat://{STANZA}', 'risk_level', cloud_risk_level)"""
 
     ft_str = "%Y-%m-%dT%H:%M:%SZ"
     nowTime = utils.format_iso_time(ft_str, 30)

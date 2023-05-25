@@ -2,7 +2,7 @@
     "meta": {
         "name": "vision_one_splunk",
         "displayName": "Vision One for Splunk",
-        "version": "1.0.0",
+        "version": "1.0.4",
         "restRoot": "vision_one_splunk",
         "schemaVersion": "0.0.3"
     },
@@ -318,6 +318,7 @@
                 {
                     "name": "vo_audit_logs",
                     "title": "Vision One Audit Logs",
+                    "description": "Displays logs that provide summaries about user access, app-related actions, setting changes, configuration modifications, and system events.",
                     "entity": [
                         {
                             "field": "name",
@@ -388,6 +389,7 @@
                 {
                     "name": "vo_wb",
                     "title": "Vision One Workbench Alerts",
+                    "description": "Displays alerts triggered by detection models allowing you to further investigate events.",
                     "entity": [
                         {
                             "field": "name",
@@ -458,6 +460,7 @@
                 {
                     "name": "vo_oat",
                     "title": "Vision One Observed Attack Techniques",
+                    "description": "Displays the individual events detected in your environment that may trigger an alert and any related MITRE information.",
                     "entity": [
                         {
                             "field": "name",
@@ -526,39 +529,39 @@
                         {
                             "field": "risk_level",
                             "label": "Risk level",
-                            "help": "",
-                            "required": false,
                             "type": "singleSelect",
-                            "defaultValue": "medium",
+                            "help": "The minimum risk level required to pull data. Selecting \"undefined\", \"info\", or \"low\" may cause a large amount of data transfer",
                             "options": {
                                 "disableSearch": true,
                                 "autoCompleteFields": [
                                     {
-                                        "value": "critical",
-                                        "label": "critical"
+                                        "label": "critical",
+                                        "value": "critical"
                                     },
                                     {
-                                        "value": "high",
-                                        "label": "high"
+                                        "label": "high",
+                                        "value": "high"
+                                        
                                     },
                                     {
-                                        "value": "medium",
-                                        "label": "medium"
+                                        "label": "medium",
+                                        "value": "medium"
                                     },
                                     {
-                                        "value": "low",
-                                        "label": "low"
+                                        "label": "low",
+                                        "value": "low"
                                     },
                                     {
-                                        "value": "info",
-                                        "label": "info"
+                                        "label": "info",
+                                        "value": "info"
+                                        
                                     },
                                     {
-                                        "value": "undefined",
-                                        "label": "undefined"
+                                        "label": "undefined","value": "undefined"
                                     }
                                 ]
-                            }
+                            },
+                            "defaultValue": "medium"
                         }
                     ]
                 }

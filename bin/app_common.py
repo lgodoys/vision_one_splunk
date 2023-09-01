@@ -186,9 +186,12 @@ def request_help(max_retries,backoff_sec):
         response = None
         while attempt_times >= 0:
             try:
-                response = requests.request(method, url, params=parameters, headers=headers, json=payload, timeout=timeout)
-                raise_for_status(response)
-                return response
+                if "https" in url:
+                    response = requests.request(method, url, params=parameters, headers=headers, json=payload, timeout=timeout)
+                    raise_for_status(response)
+                    return response
+                else:
+                    return "Error: URL protocol must be HTTPS"
             except RetryException as e:
                 pass
             except UnRetryException as e:

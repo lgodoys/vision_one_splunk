@@ -5,13 +5,13 @@
     "id": {
       "group": null,
       "name": "vision_one_splunk",
-      "version": "1.0.4"
+      "version": "1.0.5"
     },
     "author": [
       {
         "name": "Leonardo Godoy",
-        "email": null,
-        "company": null
+        "email": "leonardo@lgodoys.dev",
+        "company": "LGODOYS.dev"
       }
     ],
     "releaseDate": null,
@@ -42,12 +42,16 @@
   "tasks": null,
   "inputGroups": null,
   "incompatibleApps": null,
-  "platformRequirements": null,
+  "platformRequirements": {
+    "splunk": {
+      "Enterprise": "*"
+    }
+  },
   "supportedDeployments": [
     "_standalone",
     "_distributed"
   ],
-  "targetWorkloads": null
+  "targetWorkloads": ["_search_heads","_forwarders"]
 }
 # The following sections can be customized and added to the manifest. For detailed information,
 # see the documentation at http://dev.splunk.com/view/packaging-toolkit/SP-CAAAE9V

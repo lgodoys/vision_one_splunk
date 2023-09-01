@@ -1,5 +1,8 @@
 RELEASE NOTES:
 
+Version 1.0.5: Sep 01, 2023
+Solved an issue that allows to run requests in HTTP and HTTPS endpoints, being not complain with Splunk Cloud Guidelines. Was added to requests helper method a check to allow only HTTPS endpoints.
+
 Version 1.0.4: May 25, 2023
 Solved an issue related with OAT input, that updates constantly the Risk Level, changing between Risk Levels from XDR API Endpoint and local level.
 

@@ -541,7 +541,6 @@
                                     {
                                         "label": "high",
                                         "value": "high"
-                                        
                                     },
                                     {
                                         "label": "medium",
@@ -554,10 +553,10 @@
                                     {
                                         "label": "info",
                                         "value": "info"
-                                        
                                     },
                                     {
-                                        "label": "undefined","value": "undefined"
+                                        "label": "undefined",
+                                        "value": "undefined"
                                     }
                                 ]
                             },

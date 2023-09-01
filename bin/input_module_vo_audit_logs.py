@@ -28,7 +28,7 @@ def user_format(helper,obj):
 def role_format(helper,obj):
     try:
         if len(obj.get('loggedRole','').strip()) == 0:
-            obj['loggedRole'] = 'Master Administrator'
+            obj['loggedRole'] = 'Administrator'
     except Exception as err:
         helper.log_error('[TrendMicro Audit] role field format error: %s'%(str(err)))
 
@@ -72,8 +72,11 @@ def collect_events(helper, ew):
     cid = utils.extractCID(token)
 
     parse_url = urlparse(endpoint)
-    endpoint = "{}://{}".format(parse_url.scheme, parse_url.netloc)
-    helper.log_info("[TrendMicro Audit] get endpoint: %s" % endpoint)
+    if not "https" in  parse_url.scheme:
+        return 0
+    else:
+        endpoint = "{}://{}".format(parse_url.scheme, parse_url.netloc)
+        helper.log_info("[TrendMicro Audit] get endpoint: %s" % endpoint)
 
     url_path = '/v3.0/audit/logs'
 

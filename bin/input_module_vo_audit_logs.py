@@ -61,6 +61,7 @@ def validate_input(helper, definition):
 def collect_events(helper, ew):
     STANZA = helper.get_input_stanza_names()
     polling = helper.get_arg('interval')
+    https_proxy = helper.get_arg('https_proxy')
     token = helper.get_arg('global_account')['password']
     backoff_time = float(helper.get_global_setting("backoff_time") or 10)
     endpoint = helper.get_arg('global_account')['url']
@@ -72,7 +73,7 @@ def collect_events(helper, ew):
     cid = utils.extractCID(token)
 
     parse_url = urlparse(endpoint)
-    if not "https" in  parse_url.scheme:
+    if not "https" in parse_url.scheme:
         return 0
     else:
         endpoint = "{}://{}".format(parse_url.scheme, parse_url.netloc)
@@ -94,6 +95,12 @@ def collect_events(helper, ew):
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json;charset=utf-8'
     }
+    
+    proxies = {}
+    
+    if https_proxy is not None:
+        proxies['https'] = https_proxy
+
     helper.log_info("[TrendMicro Audit] request params: %s" %(str(query_params)))
     request_help = utils.request_help(2, backoff_time)
 
@@ -102,7 +109,8 @@ def collect_events(helper, ew):
             url=endpoint + url_path,
             method="GET",
             parameters=query_params,
-            headers=headers
+            headers=headers,
+            proxies=proxies
         )
         res.raise_for_status()
         data = res.json()
@@ -124,4 +132,4 @@ def collect_events(helper, ew):
         ew.write_event(event)
 
     utils.update_context(STANZA, 'startTime', nowTime)
-    utils.update_tpc_metrics(endpoint, headers)
+    # utils.update_tpc_metrics(endpoint, headers, proxies)

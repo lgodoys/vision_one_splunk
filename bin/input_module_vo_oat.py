@@ -75,11 +75,14 @@ def cim_compliant(data):
 class OATDataPipeline:
     __uri = '/v3.0/xdr/oat/dataPipeline'
 
-    def __init__(self,helper,endpoint,token,risk_level) -> None:
+    def __init__(self,helper,endpoint,https_proxy,token,risk_level) -> None:
         self.__helper = helper
         self.__endpoint = endpoint
         self.__token = token
         self.__query_levels = format_risk_levels(risk_level)
+        self.__proxies = {}
+        if https_proxy is not None:
+            self.__proxies['https'] = https_proxy
         if not self.__token:
             raise Exception('no valid config')
         self.__headers = {
@@ -94,7 +97,8 @@ class OATDataPipeline:
         res = requests.request(
             url=self.__endpoint + self.__uri,
             method="GET",
-            headers=self.__headers
+            headers=self.__headers,
+            proxies=self.__proxies
         )
         if res.status_code == requests.codes.bad_request:
             config = {
@@ -105,7 +109,8 @@ class OATDataPipeline:
                 url=self.__endpoint + self.__uri,
                 method="POST",
                 headers=self.__headers,
-                json=config
+                json=config,
+                proxies=self.__proxies
             )
             if res.status_code != requests.codes.created:
                 raise Exception("[TrendMicro OAT] fail to init register")
@@ -113,7 +118,8 @@ class OATDataPipeline:
             res = requests.request(
                 url=self.__endpoint + self.__uri,
                 method="GET",
-                headers=self.__headers
+                headers=self.__headers,
+                proxies=self.__proxies
             )
         res.raise_for_status()
         return res.json()
@@ -131,7 +137,8 @@ class OATDataPipeline:
             url=self.__endpoint + self.__uri,
             method="PATCH",
             headers=self.__headers,
-            json=config
+            json=config,
+            proxies=self.__proxies
         )
         res.raise_for_status()
 
@@ -152,6 +159,7 @@ def collect_events(helper, ew):
     token = helper.get_arg('global_account')['password']
     backoff_time = int(helper.get_global_setting("backoff_time") or 10)
     endpoint = helper.get_arg('global_account')['url']
+    https_proxy = helper.get_global_setting('https_proxy')
     
     if (not endpoint) or (not token):
         helper.log_info("[TrendMicro Audit] no valid config, will pass")
@@ -163,7 +171,7 @@ def collect_events(helper, ew):
     parse_url = urlparse(endpoint)
     endpoint = "{}://{}".format(parse_url.scheme, parse_url.netloc)
     try:
-        oat_util = OATDataPipeline(helper,endpoint,token,risk_level)
+        oat_util = OATDataPipeline(helper,endpoint,https_proxy,token,risk_level)
     except Exception as e:
         return 1
     global_ctx = utils.fetch_context("GLOBAL")
@@ -189,6 +197,10 @@ def collect_events(helper, ew):
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json;charset=utf-8'
     }
+    
+    proxies = {}
+    if https_proxy is not None:
+        proxies['https'] = https_proxy
 
     startTime = file_context.get('startTime', nowTime)
     if not startTime.endswith('Z'):
@@ -212,7 +224,8 @@ def collect_events(helper, ew):
                 url=endpoint + "/v3.0/xdr/oat/dataPipeline/packages",
                 method="GET",
                 parameters=query_params,
-                headers=headers
+                headers=headers,
+                proxies=proxies,
             )
             res.raise_for_status()
 
@@ -227,7 +240,8 @@ def collect_events(helper, ew):
                 res = request_help(
                     url=endpoint + "/v3.0/xdr/oat/dataPipeline/packages/" + package_id,
                     method="GET",
-                    headers=headers
+                    headers=headers,
+                    proxies=proxies
                 )
                 res.raise_for_status()
                 res_body = res.json(cls=ndjson.Decoder)
@@ -258,4 +272,4 @@ def collect_events(helper, ew):
         return 1
     finally:
         utils.update_context(STANZA, 'startTime', checkpoint_time)
-    utils.update_tpc_metrics(endpoint, headers)
+    #utils.update_tpc_metrics(endpoint, headers)

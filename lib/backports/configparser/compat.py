@@ -1,8 +1,8 @@
-import types
 import io as _io
+import types
 
 
-def text_encoding(encoding, stacklevel=2):
+def text_encoding(encoding, stacklevel=2):  # pragma: no cover
     """
     Stubbed version of io.text_encoding as found in Python 3.10
     """

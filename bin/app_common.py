@@ -181,13 +181,13 @@ def raise_for_status(response):
 
 
 def request_help(max_retries,backoff_sec):
-    def send_request(url,method,parameters=None,payload=None,headers=None, timeout=55):
+    def send_request(url,method,parameters=None,payload=None,headers=None, proxies=None,timeout=55):
         attempt_times, attempt_delay = max_retries, backoff_sec
         response = None
         while attempt_times >= 0:
             try:
                 if "https" in url:
-                    response = requests.request(method, url, params=parameters, headers=headers, json=payload, timeout=timeout)
+                    response = requests.request(method, url, params=parameters, headers=headers, json=payload, timeout=timeout,proxies=proxies)
                     raise_for_status(response)
                     return response
                 else:
@@ -205,7 +205,7 @@ def request_help(max_retries,backoff_sec):
     return send_request
 
 
-def update_tpc_metrics(endpoint, headers):
+def update_tpc_metrics(endpoint, headers, proxies):
     try:
         tpc_req = request_help(2, 3)
         body = {
@@ -220,7 +220,8 @@ def update_tpc_metrics(endpoint, headers):
             url=endpoint + "/external/v2/direct/tpc/external/tpc/cms/api/v1/connector/metrics",
             method="PUT",
             payload=body,
-            headers=headers
+            headers=headers,
+            proxies=proxies
         )
         res.raise_for_status()
     except Exception as e:

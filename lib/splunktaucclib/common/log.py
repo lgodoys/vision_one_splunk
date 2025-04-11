@@ -1,11 +1,11 @@
 #
-# Copyright 2021 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 
 import logging
 
-import splunktalib.common.log as stclog
+from solnlib import log
 
 _level_by_name = {
     "DEBUG": logging.DEBUG,
@@ -46,19 +46,8 @@ def set_log_level(log_level):
     """
     Set log level.
     """
-    stclog.Logs().set_level(_get_log_level(log_level))
+    log.Logs().set_level(_get_log_level(log_level))
 
 
 # Global logger
-logger = stclog.Logs().get_logger("ucc_lib")
-
-
-def reset_logger(name):
-    """
-    Reset logger.
-    """
-
-    stclog.reset_logger(name)
-
-    global logger
-    logger = stclog.Logs().get_logger(name)
+logger = log.Logs().get_logger("ucc_lib")

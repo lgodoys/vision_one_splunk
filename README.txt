@@ -1,5 +1,8 @@
 RELEASE NOTES:
 
+Version 1.0.6: Apr 10, 2025 
+Updated Splunk Lib to latest version. Updated other Python libs to latest versions. Added server.conf file to enable cluster replication.
+
 Version 1.0.5: Sep 01, 2023
 Solved an issue that allows to run requests in HTTP and HTTPS endpoints, being not complain with Splunk Cloud Guidelines. Was added to requests helper method a check to allow only HTTPS endpoints.
 

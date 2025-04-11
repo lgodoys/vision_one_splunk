@@ -72,14 +72,23 @@ def collect_events(helper, ew):
     STANZA = helper.get_input_stanza_names()
     token = helper.get_arg('global_account')['password']
     endpoint = helper.get_arg('global_account')['url']
-    
+    https_proxy = helper.get_global_setting('https_proxy')
     if (not endpoint) or (not token):
         helper.log_info("[TrendMicro Audit] no valid config, will pass")
         return 0
     
     parse_url = urlparse(endpoint)
-    endpoint = '{}://{}'.format(parse_url.scheme, parse_url.netloc)
     
+    if not "https" in parse_url.scheme:
+        return 0
+    else:
+        endpoint = "{}://{}".format(parse_url.scheme, parse_url.netloc)
+        helper.log_info("[TrendMicro Audit] get endpoint: %s" % endpoint)
+    
+    proxies = {}
+    if https_proxy is not None:
+        proxies['https'] = https_proxy
+        
     backoff_time = float(helper.get_global_setting('backoff_time') or 10)
 
     cid = utils.extractCID(token)
@@ -105,11 +114,17 @@ def collect_events(helper, ew):
         url_path = '/v3.0/workbench/alerts'
         
         try:
-            res = request_help(url=endpoint+url_path, method='GET', parameters=params, headers=headers)
+            res = request_help(
+                url=endpoint+url_path,
+                method='GET',
+                parameters=params,
+                headers=headers,
+                proxies=proxies
+            )
             res.raise_for_status()
             json_obj = res.json()
             if 'error' in json_obj:
-                helper.log_error('Error desde el workbench: %s'%(str(json_obj['error'])))
+                helper.log_error('[TrendMicro WB] Error from workbench: %s'%(str(json_obj['error'])))
             info = json_obj['items']
             for alert in info:
                 large_attr_list = ['highlightedObjects','affectedEntities']
@@ -128,18 +143,18 @@ def collect_events(helper, ew):
                 event = helper.new_event(data=event_data, host=helper.get_arg('global_account')['username'], index=helper.get_output_index(), source=helper.get_input_type(), sourcetype=helper.get_sourcetype(), done=True, unbroken=True)
                 ew.write_event(event)
         except requests.exceptions.HTTPError as e:
-            helper.log_error('[TrendMicro XDR] workbench request error: %s %s'%(str(e), str(endpoint)))
+            helper.log_error('[TrendMicro WB] workbench request error: %s %s'%(str(e), str(endpoint)))
             return 1
         except requests.exceptions.Timeout as e:
-            helper.log_error('[TrendMicro XDR] workbench request timeout error: %s'%(str(e)))
+            helper.log_error('[TrendMicro WB] workbench request timeout error: %s'%(str(e)))
             return 1
         except Exception as e:
-            helper.log_error('[TrendMicro XDR] workbench exception: %s'%(str(e)))
+            helper.log_error('[TrendMicro WB] workbench exception: %s'%(str(e)))
             
         utils.update_context(STANZA,'startDateTime',nowTime)
-        utils.update_tpc_metrics(endpoint,headers)
+        #utils.update_tpc_metrics(endpoint,headers)
             
     
     except RuntimeError as e:
-        helper.log_error('[TrendMicro XDR] workbench unknown error: %s'%(str(e)))
+        helper.log_error('[TrendMicro WB] workbench unknown error: %s'%(str(e)))
         return 1

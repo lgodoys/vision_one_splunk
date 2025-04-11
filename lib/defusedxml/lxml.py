@@ -34,12 +34,13 @@ class RestrictedElement(_etree.ElementBase):
     """A restricted Element class that filters out instances of some classes"""
 
     __slots__ = ()
-    restrictedlist = _etree._Entity
+    # blacklist = (etree._Entity, etree._ProcessingInstruction, etree._Comment)
+    blacklist = _etree._Entity
 
     def _filter(self, iterator):
-        restrictedlist = self.restrictedlist
+        blacklist = self.blacklist
         for child in iterator:
-            if isinstance(child, restrictedlist):
+            if isinstance(child, blacklist):
                 continue
             yield child
 

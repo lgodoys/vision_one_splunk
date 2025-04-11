@@ -2,7 +2,7 @@
     "meta": {
         "name": "vision_one_splunk",
         "displayName": "Vision One for Splunk",
-        "version": "1.0.4",
+        "version": "1.0.7",
         "restRoot": "vision_one_splunk",
         "schemaVersion": "0.0.3"
     },
